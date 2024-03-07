@@ -22,6 +22,7 @@ apt-get install debhelper
 Create patches folder on debian
 ```
 mkdir hello-2.10/debian/patches
+cd hello-2.10/debian
 ```
 
 Create patch file and add related files for making patch
@@ -53,7 +54,7 @@ dch -i
 ##1.3 Build and install package
 Build package generat hello_2.10-2ubuntu2_amd64.deb 
 ```
-cd hello-2.10
+cd ../hello-2.10
 dpkg-buildpackage -rfakeroot -uc -b
 ```
 
@@ -73,4 +74,63 @@ And then check test.sh belongs to which package and execute it.
 dpkg -S testing.sh; testing.sh
 ```
 
-##2.1 PPA
+##2.1 PPA preparation (Ubuntu client site operation)
+Create SSH keys
+```
+ssh-keygen -t rsa
+cat ~/.ssh/id_rsa.pub
+```
+
+Create OpenPGP keys
+```
+gpg --gen-key
+```
+
+List gpg keys find <KEY_ID>
+```
+gpg --list-keys
+```
+
+Send gpg keys to keyserver
+```
+gpg --keyserver keyserver.ubuntu.com --send-keys <KEY_ID>
+```
+
+##2.2 PPA preparation (lanchpad website operation)
+Register an account
+Add an SSH keys
+Import an OpenPGP keys
+Create PPA
+
+
+
+##2.3 Upload source to PPA
+Update dsc and changes file
+```
+dpkg-buildpackage -S
+```
+
+```
+debsign -k<KEY_ID> hello_2.10-2ubuntu3_amd64.changes
+dput ppa:adlery/ppa hello_2.10-2ubuntu3_amd64.changes
+```
+
+##2.4 Download source from PPA
+Append PPA
+```
+sudo add-apt-repository ppa:adlery/ppa
+sudo apt-get update
+```
+
+Install package
+```
+sudo apt-get install <package-name>
+```
+
+##3.1 Git
+Create a git project, prepare ssh-key
+```
+git clone git@github.com:nillsonyang/hello.git
+```
+
+Upload source to git server
